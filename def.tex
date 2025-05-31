@@ -165,4 +165,40 @@ AML, Yuhao Mao,~Page~\thepage
 \makeatother
 \setlength{\parindent}{0pt}
 
+% \newtcolorbox{sectionbox}[1]{%
+%   enhanced,
+%   colback=#1!05,
+%   colframe=#1!00,
+%   boxrule=0pt,
+%   arc=0.2cm,
+%   width=\linewidth+0.2cm,
+%   left=0.1cm,
+%   right=0.1cm,
+%   top=0.1cm,
+%   bottom=0.1cm,
+%   boxsep=0pt,
+%   breakable,
+%   enlarge left by=-0.1cm,
+%   enlarge right by=-0.1cm,
+%   enlarge top by=-0.1cm,
+%   enlarge bottom by=-0.1cm,
+% }
 
+\newtcolorbox{sectionbox}[1]{%
+  enhanced,
+  boxrule=0pt,
+  colback=#1!05,
+  colframe=#1!00,
+  borderline west={0.06cm}{-0.04cm}{#1},
+  arc=0.3cm,
+  left=0.1cm,
+  right=0.1cm,
+  top=0.1cm,
+  bottom=0.1cm,
+  boxsep=0pt,
+  breakable,
+  before skip=4pt,
+  after skip=0pt,
+  height fixed for=first and middle,
+}
+\setlength{\columnsep}{4pt}
