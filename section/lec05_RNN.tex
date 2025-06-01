@@ -10,12 +10,15 @@
 
 \textbf{DisAdv for GV/E} (1) Instabilities during training lead to Inf/NaN. (2) hard to capture long-term dependencies, cuz no gradient at lower levels, no learning. (3) large gradients\(\Leftrightarrow\)jumper over local minima or oscillate.
 
-\subsection*{LSTM}
-Input, forget, output \(\in [0, 1]\), gate \(\in\mathbb{R}\).
+\textbf{Gradient clipping}\(\to\)prevent \(\nabla\) explode.
 
-\textbf{Vanila}: \(h_{t}^{l}=\tanh W^{l}\left(\begin{array}{l}
-    h_{t}^{l-1} \\
-    h_{t-1}^{l}
+\textbf{LSTM} Inpt, forgt, outpt \(\in [0, 1]\), gate \(\in\mathbb{R}\).
+
+(predecessor to LSTM is GRU)
+
+\textbf{Vanila}: \(h_{t}=\tanh W\left(\begin{array}{l}
+    x_t \\
+    h_{t-1}
     \end{array}\right)\).
 \textbf{LSTM}:
 
@@ -29,10 +32,8 @@ Input, forget, output \(\in [0, 1]\), gate \(\in\mathbb{R}\).
     \operatorname{sigm} \\
     \operatorname{sigm} \\
     \tanh
-    \end{array}\right) W^{l}\left(\begin{array}{l}
-    h_{t}^{l-1} \\
-    h_{t-1}^{l}
+    \end{array}\right) W\left(\begin{array}{l}
+    x_t \\
+    h_{t-1}
     \end{array}\right)\),
-\(c_{t}^{l}=f \odot c_{t-1}^{l}+i \odot g, h_{t}^{l}=o \odot \tanh (c_{t}^{l}), W^{l}[4 n \times 2 n]\).
-    
-\textbf{Gradient clipping}\(\to\)prevent \(\nabla\)explode.
+\(W : 4 n \!\!\times\!\! 2 n\), \(c_{t}=f \odot c_{t-1}+i \odot g\) \hspace{\stretch{1}} \(h_{t}=o \odot \tanh (c_{t})\)
