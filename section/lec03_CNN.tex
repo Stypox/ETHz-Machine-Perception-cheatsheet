@@ -3,10 +3,10 @@
 \textbf{Neural Findings}
 (1) Rapid serial visual presentation(RSVP), (2) Hubel \& Wiesel, receptive fields (3) HMAX Model, simple/complex cell.
 
-\textbf{Pre-DL Model}: Neurocognitron, LeNet-5, \textbf{Dataset}: ImageNet.
+\textbf{Pre-DL Model}: Neurocognitron, LeNet-5, \textbf{Dataset}: ImageNet challenge.
 
 \textbf{3 Properties}:\\
-(1) \textbf{Linear} \(T(\alpha {u}+\beta {v})=\alpha T({u})+\beta T({v})\).\\ (2) \textbf{invariance} to \(f\), \(T(f({u}))=T({u})\).\\ (3) \textbf{equivariant} to \(f\), \(T(f({u}))=f(T({u}))\).
+(1) \textbf{Linear} \(T(\alpha {u}+\beta {v})=\alpha T({u})+\beta T({v})\).\\ (2) \textbf{Invariance} to \(f\), \(T(f({u}))=T({u})\).\\ (3) \textbf{Equivariance} to \(f\), \(T(f({u}))=f(T({u}))\).
 
 \subsection*{Convolution}
 \textbf{Correlation} $A \otimes B$ \hspace{\stretch{1}} \textbf{Convolution} $A \ast B$
@@ -51,6 +51,17 @@ Weight sharing btw pixels.
 
 \subsection*{Application}
 \textbf{Alexnet} Smaller filter, more layers. \\
+\textbf{VGG} +layers, -params, +receptive field. \\
 \textbf{GoogLeNet} Deeper, Inception module, 1x1 conv for dim/channel reduction\(64\to 32\), Auxiliary \verb|cls| head \(\Rightarrow\) More efficient. \\
-\textbf{ResNet} Adv for residual connection: (1) better convergence. (2) propagate high frequency information (U-net).
+\textbf{ResNet} +layers, faster, uses residual connections: (1) better convergence. (2) propagate high freq info (U-net).\\
+\textbf{U-Net} fully CNN, combine global+local features using tensors from prev layer.
 
+\subsection*{Fully CNN}
+
+CNN + final MLP only fixed size, for segmentat. can't see whole context; fully CNN convolutions at original image size expensive so uses down+up-sampling.
+
+\textbf{Unpooling Methods}: Nearest Neighbor, Bed of Nail, Max Unpooling (need maxpool from prev net).
+
+\textbf{ConvTranspose2D / strided upconvolution} shape: \(L_{\text{out}} = (L_{\text{in}} - 1)\text{Stride}_{=1} - 2  \text{Pad}_{=0} + \text{Dilat}_{=1}(\text{Ker} - 1) + \text{OutPad}_{=0} + 1\)
+
+Motion infilling uses conv. autoenc.
