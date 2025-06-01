@@ -9,6 +9,11 @@
 (1) \textbf{Linear} \(T(\alpha {u}+\beta {v})=\alpha T({u})+\beta T({v})\).\\ (2) \textbf{invariance} to \(f\), \(T(f({u}))=T({u})\).\\ (3) \textbf{equivariant} to \(f\), \(T(f({u}))=f(T({u}))\).
 
 \subsection*{Convolution}
+\textbf{Correlation} $A \otimes B$ \hspace{\stretch{1}} \textbf{Convolution} $A \ast B$
+(Cross-)Correlat. slides matrices in original orientation, and $A \ast B = A \otimes \text{ROT}_{180^{\circ}}(B)$
+
+
+
 \textsf{F}:\( z_{ij}^{(l)}=w^{(l)} * z^{(l-1)}+b= \sum_{mn} w_{mn}^{(l)} z_{i-m, j-n}^{(l-1)}+b\). \\
 \textsf{B} on \(z\):\(\delta_{i,j}^{(l-1)} := \pdv{C}{z^{(l-1)}_{i,j}} = \sum_{i'j'} \pdv{C}{z^{(l)}_{i,j}} \pdv{z^{(l)}_{ij}}{z^{(l-1)}_{ij}} =  \sum_{i'j'} \delta_{ij}^{(l)} w_{i'-l,j'-j}^{(l)} = \delta^{(l)} * \text{ROT}_{180^{\circ}}(w^{(l)})\).\\
 \textsf{B} on \(w\):\(\pdv{C}{w^{(l)}_{m,n}} =  \sum_{i',j'} \pdv{C}{z^{(l)}_{i,j}} \pdv{z^{(l)}_{i,j}}{w^{(l)}_{m,n}} =  \delta^{(l)} * \text{ROT}_{180^{\circ}}(z^{(l-1)})\)

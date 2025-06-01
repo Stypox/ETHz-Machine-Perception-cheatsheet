@@ -1,0 +1,23 @@
+\section{Tutorials}
+
+\textbf{Loss} Mean Sq Err: $L_{\text{MSE}} $ $= \frac{1}{n} \sum_{i=1}^{n} (y_i - \hat{y}_i)^2$; Binary Cross Entropy $L_{\text{BCE}} = -\frac{1}{n} \sum_{i=1}^{n} \left[ y_i \log(\hat{y}_i) + (1 - y_i) \log(1 - \hat{y}_i) \right]$; Categorical Cross Entropy $L_{\text{CCE}} = -\sum_{i=1}^{n} \sum_{j=1}^{C} y_{ij} \log(\hat{y}_{ij})$; Hinge loss $L_{\text{Hinge}} = \frac{1}{n} \sum_{i=1}^{n} \max(0, 1 - y_i \hat{y}_i)$.
+
+\textbf{Regularization} (+ loss) L1 $||\theta||_1$,  L2 $\tfrac{1}{2}||\theta||_2^2$
+
+\textbf{Dropout} at training time disable node $j$ in layer $l$ w/ prob $p$: $r_j^{[l]} \sim \text{Bernoulli}(p)$, then $\tilde{y}^{[l]}=r^{[l]} \odot y^{[l]}$; at inference time do weight scaling $\tilde{\theta} = \theta p$.
+
+\textbf{Normalization} $\mu = \tfrac{1}{n} \sum x_i$; $\sigma^2 = \tfrac{1}{n-1} \sum (x_i - \mu)^2$, $x_{i}^N = (x_i-\mu) / \sqrt{\sigma^2}$.
+
+\textbf{Batch norm.} $x_{i}^N = (x_i-\mu) / \sqrt{\sigma^2 + \epsilon}$ where $\epsilon$ small for numerical stability, then $\tilde{x}_{i} = \gamma x_i^N + \beta$ where $\gamma, \beta \in \mathbb{R}$ learnable. In theory solves internal covariate shift, in practice makes smoother landscape, allows higher learning rate.
+
+
+\textbf{Activation} ReLU $\max(0,x)$, leaky ReLU $\max(\alpha x,x)$, random lky ReLU $\alpha \sim \mathcal{U}(a,b)$
+\(\sigma(x) = \frac{1}{1+e^{-x}}\) \hspace{\stretch{1}} \(\sigma'(x) = \sigma(x) \cdot (1 - \sigma(x))\)
+\(\tanh(x) = \frac{e^x - e^{-x}}{e^x + e^{-x}}\) \hspace{\stretch{1}} \(\tanh'(x) = 1-\tanh^2(x)\)
+
+\newcommand{\minuseq}{\mathrel{\vcenter{\hbox{\scriptsize$-\!\!=$}}}}
+\textbf{Optimization} GD $\theta \minuseq \eta \grad_\theta{L(\theta)}$; SGD like GD but on just one element; Mini-batch GD on a batch $\grad_{\theta} (\tfrac{1}{m} \sum_i L(\theta, x_i, y_i))$; Polyak Momentum $v \leftarrow \alpha v - \epsilon \grad_{\theta} (\tfrac{1}{m} \sum_i L(\theta, x_i, y_i))$, $\theta \minuseq v$ but can diverge; Nesterov's Momentum $v \leftarrow \alpha v - \epsilon \grad_{\theta} (\tfrac{1}{m} \sum_i L(\theta \text{\underline{$+ \alpha v$}}, x_i, y_i))$.
+
+\textbf{Learning rate} AdaGrad divide by $\sqrt{\sum_i ||\text{previousGrad}_i||_2^2}$; RMSProp exponential weighted average; Adam = AdaGrad + Momentum SGD.
+
+\textbf{Bagging/Ensemble} models trained separately; they have minima often connected by constant loss. Fast Geometric Ensembling trains model normally for 80\% of time, then final 20\% with cyclic lr, then ensemble (but many models!). Stochastic Weight Averaging: just one model and keep running avg of parameters when lr is minimum in cycle.
