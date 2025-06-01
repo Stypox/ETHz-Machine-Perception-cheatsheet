@@ -1,14 +1,16 @@
 \section{Autoregressive models}
-\textbf{Goal} Density estim \(p({x}) = \prod_{i} p({x}_{i, j, k} | {x}_{<i})\).
+\textbf{Goal} Density estim \(p({x}) = \prod_{i} p({x}_{i} | {x}_{<i})\).
 
-\textbf{Fully Visible Sigmoid Belief Networks} Tabular approach need \(2^{L}\) states not acceptable, replace with regression \(f_{i}(x_{1:i-1})= \sigma(\alpha_{0}^{i}+\sum_{j=1}^{i-1}\alpha_{j}^{i} x_{j})\),\\ \(p_{\theta_{i}}(x_{i} | x_{<i})=\operatorname{Ber}(f(x_{1:i-1}))\).
+\subsection*{Fully Visible Sigmoid Belief Networks}
+
+Tabular approach needs \(2^{L}\) states not acceptable, replace with regression \(f_{i}(x_{1:i-1})= \sigma(\alpha_{0}^{i}+\sum_{j=1}^{i-1}\alpha_{j}^{i} x_{j})\),\\ \(p_{\theta_{i}}(x_{i} | x_{<i})=\operatorname{Ber}(f(x_{1:i-1}))\).
 
 
 \subsection*{Neural Autoreg Density Estim (NADE)}
-Extend FVSBN with NN, \({h}_{i}=\sigma({b}+{W}_{<i} {x}_{<i}), \hat{x}_{i}=\sigma(c_{i}+V_{i} \mathbf{h}^{({i})})\).
-Leverage by \(({b}+{W}_{<i+1} {x}_{<i+1})-({b}+{W}_{<i}{x}_{<i})={W}_{i+1 }{x}_{i+1}\).
+Extend FVSBN with NN, \({h}_{i}=\sigma({b}+{W}_{<i} {x}_{<i}),\) output \( \hat{x}_{i}=\sigma(c_{i}+V_{i} \mathbf{h}^{({i})})\).
+Note: \(({b}+{W}_{\leq i} {x}_{\leq i})-({b}+{W}_{<i}{x}_{<i})={W}_{i}{x}_{i}\).
 
-ML \(\sum_{t=1}^{T} \ln p(x^{t}) = \sum_{t=1, i=1}^{T, D}  \ln p(x_{i}^{(t)} | x_{<i}^{(t)})\). Ground truth fed in conditional term for higher accuracy.
+Train w/ NLL \(\sum_{t=1, i=1}^{T, D}  \ln p(x_{i}^{(t)} | x_{<i}^{(t)})\). Ground truth fed in conditional term for higher accuracy.
 
 \textbf{Pros}: (1) Comput cost \(O(TD)\). (2) second-order optim OK (3) Reals and multinomials OK. (4) Random Order works fine.
 
@@ -18,38 +20,38 @@ ML \(\sum_{t=1}^{T} \ln p(x^{t}) = \sum_{t=1, i=1}^{T, D}  \ln p(x_{i}^{(t)} | x
 (3) ConvNADE
 
 \subsection*{Masked Autoencoder (MADE)}
-\begin{center}
-    \includegraphics[width=\columnwidth]{figures/MADE.png}
-\end{center}
-Constrain AE s.t. output fulfill autoreg property: No path between output unit \(x_d\) and  \(x_{d+1:D}\) (relative to some ordering).
+
+Constrain AE s.t. output fulfills autoreg property: No path between output unit \(x_d\) and  \(x_{d+1:D}\) (relative to some ordering).
 
 Achieve by masking AE\(\Rightarrow\)each output units network don't take latter as input. During Training, randomly re-mask, similar to dropout.
 
 
-\subsection*{PixelCNN}
+\subsection*{PixelRNN / PixelCNN}
 
 PixelRNN: Generate pixels staring from corner. Depend on previous pixels by LSTM. Cons: slow due to sequential generation, explicit pixel dependencies.
 
-PixelCNN: Starting from corner. Dependency by CNN over context region.
+PixelCNN: Starting from corner, only see context region, so faster training.
 
-\textbf{Pred} \(p(x_{i} | x_{<i})=p(x_{i, R} | x_{<i}) p(x_{i, G} | x_{i, R}, x_{<i}) \times p(x_{i, B} | x_{i, R}, x_{i, G}, x_{<i})\)
+\begin{small}
+\textbf{Pred} \(p(x_{i} | x_{<i})=p(x_{i, R} | x_{<i}) p(x_{i, G} | x_{i, R}, x_{<i}) \times p(x_{i, B} | x_{i, R}, x_{i, G}, x_{<i})\) for RGB handling
+\end{small}
 
 Finite kernel mask Conv \(\to\)blind spot: actual prediction of pixel does not depend on some region of unmasked part.
 
-\textbf{Improvement}:
-(1) more expressive nonlinear: \(\mathbf{h}_{k+1}=\tanh (W_{k, f} * \mathbf{h}_{k}) \odot \sigma(W_{k, g} * \mathbf{h}_{k})\).
-(2) Vertical stack and Horizontal stack for blind spot.
+% \textbf{Improvement}:
+% (1) more expressive nonlinear: \(\mathbf{h}_{k+1}=\tanh (W_{k, f} * \mathbf{h}_{k}) \odot \sigma(W_{k, g} * \mathbf{h}_{k})\).
+% (2) Vertical stack and Horizontal stack for blind spot.
 
-\textbf{Results}: img-like patches no semantics.
+% \textbf{Results}: img-like patches no semantics.
 
-\textbf{Pros}: (1) explicit likelihood (2) \(p_{\theta}(\mathcal{D}_{\text{train}})\) good evaluation metric (3) Good samples
+% \textbf{Pros}: (1) explicit likelihood (2) \(p_{\theta}(\mathcal{D}_{\text{train}})\) good evaluation metric (3) Good samples
 
-\textbf{Cons}: (3) Seq genera is slow
+% \textbf{Cons}: (3) Sequence generation is slow
 
-\begin{center}
-    \includegraphics[width=0.3\columnwidth]{figures/pixelcnn.png}
-    \includegraphics[width=0.4\columnwidth]{figures/VRNN.png}
-\end{center}
+% \begin{center}
+%     \includegraphics[width=0.3\columnwidth]{figures/pixelcnn.png}
+%     \includegraphics[width=0.4\columnwidth]{figures/VRNN.png}
+% \end{center}
 
 \subsection*{Temporal causal NN (TCN): WaveNet}
 
@@ -65,20 +67,20 @@ Trick: Dilated Conv, exponential increase in receptive field. (Stride Conv not a
 
 \textbf{Model}
 (1) Deterministic transition \(h_{t}=f_{\theta}(h_{t-1}, x_{t}, z_{t})\).
-(2) Dynamic prior \(p_{\theta}(z_{t} | h_{t-1})\), overall prior \(p_{\theta}(z)=\prod_{t=1}^{T} p_{\theta}(z_{t}|z_{<t}, x_{<t}) = \prod_{t=1}^{T} p_{\theta}(z_{t} | h_{t-1})\times\) \( p_{f_\theta}(h_{t-1} | h_{t-2}, z_{t-1}, x_{t-1})\). Explicit temporal depend btw timesteps in latent space.
+(2) Dynamic prior \(p_{\theta}(z_{t} | h_{t-1})\), overall prior \(p_{\theta}(z)=\prod_{t=1}^{T} p_{\theta}(z_{t}|z_{<t}, x_{<t}) = \prod_{t=1}^{T} p_{\theta}(z_{t} | h_{t-1})\times\) \( p_{f_\theta}(h_{t-1} | h_{t-2}, z_{t-1}, x_{t-1})\). Each $z_t$ depends on previous $x_{<t}$ and $z_{<t}$.
 
 \textbf{Adv} for \(z\) in \(f_{\theta}\): (1) robust by randomness of \(z\) (2) latent \(z\) is high level, more informative on future.
 
-\textsf{{D}}: \(p(x_{t} | z_{t})=g^{\text{out}}(h_{t-1}, z_{t})\),
+\textbf{{Dec}}: \(p(x_{t} | z_{t})=g^{\text{out}}(h_{t-1}, z_{t})\),
 
-\textsf{{E}}: \(q_{\phi}(z | x)=\prod_{t=1}^{T} q_{\phi}(z_{t} | x_{t}, x_{<t}, z_{<t})\),
+\textbf{{Enc}}: \(q_{\phi}(z | x)=\prod_{t=1}^{T} q_{\phi}(z_{t} | x_{t}, x_{<t}, z_{<t})\),
 
-\textsf{{ELBO}} \(\sum_t \log p_{\theta}(x_{t}|x_{< t}) \geq \mathcal{L}_{\theta, \phi}=\sum_{t=1}^{T} \mathbb{E}_{q_{\phi}(z_{t} | x_{t}, x_{<t}, z_{<t})}[\log p_{\theta}(x_{t} | z_{t}, z_{<t}, x_{<t})]-\KL(q_{\phi}(z_{t} | x_{t}, x_{<t}, z_{<t}) \| p_{\theta}(z_{t} | z_{<t}, x_{<t}))\).
+\textbf{{ELBO}} \(\sum_t \log p_{\theta}(x_{t}|x_{< t}) \geq \mathcal{L}_{\theta, \phi}=\sum_{t=1}^{T} \mathbb{E}_{q_{\phi}(z_{t} | x_{t}, x_{<t}, z_{<t})}[\log p_{\theta}(x_{t} | z_{t}, z_{<t}, x_{<t})]-\KL(q_{\phi}(z_{t} | x_{t}, x_{<t}, z_{<t}) \| p_{\theta}(z_{t} | z_{<t}, x_{<t}))\).
 
 KL in VRNN: (1) balance the informative \(z_t\) from \(x_t\) dependent \(q_\phi\) (if not \(x_t\) depend, \(z_t\) mostly from \(h_{t-1}\)) and overfit to memorize \(x_t\) by KL to prior. (2) Force the prior also to be informative from \(h_{t-1}\).
 
 
-\subsection*{conditional VRNN }
+\subsection*{Conditional VRNN}
 
 Hidden state \(\{z_t, \pi_t\}\).
 Priors: \(p(z_{t} | h_{t-1})=g^{p, z}(h_{t-1})\), \( p(\pi_{t} | h_{t-1})=g^{p, \pi}(h_{t-1})\).
@@ -90,22 +92,28 @@ Transition: \(h_{t}=\tau(x_{t}, z_{t}, \pi_{t}, h_{t-1})\)
 \textbf{APP} Digital Handwriting Modeling.
 
 \subsection*{Summary}
-\textbf{Pros} \(p(x)\) tractable, easy to train, sample, but slow.
-\textbf{Cons} No natural latent variable representation (except C-VRNN, STCN).
-\begin{center}
-    \includegraphics[width=0.7\columnwidth]{figures/C-VRNN.png}
-\end{center}
+\textbf{Pros} \(p(x)\) tractable, explicit NLL metric to compare performance, easy to train, sample.
+\textbf{Cons} Slow, no natural latent variable representation (except C-VRNN, STCN).
+% \begin{center}
+%     \includegraphics[width=0.7\columnwidth]{figures/C-VRNN.png}
+% \end{center}
 
 \subsection*{Self-attentioan and Transformers}
 
 \(X=\operatorname{softmax}({({W}_{{Q}} {X})({W}_{{K}} {X})^{\top}}/{\sqrt{D}}+M) \odot {W}_{{V}} {X}\), mask \(M\) prevent accessing future. 
 
-\textbf{Positional Encoding} unique sinusoidal encoding to preserve ordering. \(\mathsf{PE}_{i, t} =  \sin\text{/}\cos (\omega_{k} t)\) for \(i= 2k\text{/} 2k+1\), \(\omega_{k}=10000^{-{2 k}/{d}}\), \(t\) position in seq, \(i\) conponent in embedding vec.
+\textbf{Positional Encoding} unique sinusoidal encoding to preserve ordering. \(\mathsf{PE}_{i, t} =  \sin\text{/}\cos (\omega_{k} t)\) for \(i= 2k\text{/} 2k+1\), \(\omega_{k}=10000^{-{2 k}/{d}}\), \(t\) position in seq, \(i\) component in embedding vec.
 Cost \(O(T^2 D)\).
 
 \textbf{Trick} multi-head attention.
 
 \textbf{APP} 3D human pose and mesh recon, 3D objects Mesh generation, 3D human motion modelling.
+
+\subsection*{LLM / GPT}
+
+Needs tokenization, can be finetuned by combining unsupervised pretraining $L_1(X) = \sum \log P(x_i|x_{i-1:i-k})$ plus supervised finetuning $L_2(X,Y) =$ $ \sum \log P(y|x\dots)$, then $L=L_2(X,Y) + \lambda L_1(X)$
+
+For \textbf{autoreg. image/video generation}: problems with image quality, computational requirements. Solution: quantize images into tokens (e.g. Vector-Quantized \textbf{VQ-VAE} uses CNN enc/dec): lower dimensionality, more semantically meaningful. Also, can use LLMs.
 
 % Application: 
 % 3D human pose and mesh reconstruction: Conditioned on input image. Initializing 3D joints and 3D mesh vertex positions with T-pose. Refining 3D joints and 3D mesh vertices via self-attention. Randomly masking some joints and vertices to improve robustness., 
