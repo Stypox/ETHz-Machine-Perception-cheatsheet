@@ -1,6 +1,27 @@
-\section{Backprop \& Training}
+\section{Introduction}
 \textbf{MLE}: \(\hat{\theta} = \arg\max_\theta \sum_{i}\log p(x_i|\theta)\).
 
 \textbf{MLPs are universal function approximators} / Boolean machines / classification functions: $\sigma$ non-constant bounded continuous, $\epsilon > 0$, $\forall f \in C(I_m)$ (cube of dim m), $f(x) \approx g(x) = \sum_{i=1}^{n} v_i \sigma(w_i^T x + b_i)$ (single hidden layer).
 
 \textbf{Double Descent} both epoch-wise and model complexity-wise: bias-variance tradeoff until interpolation threshold, then gets better again. $\text{EMC}_{D,\epsilon}(\mathcal{T}) = \max\{n | \mathbb{E}_{S\sim D}\left[\text{Error}_S(\mathcal{T}(S))\right] \leq \epsilon\}$. If $\ll n$ (underparam) or $\gg n$ (overparam) can decrease test error by making $n$ bigger, if $\approx n$ error can increase or decrease.
+
+\textbf{Supervised learning} \(f\) maps data \(x\to\) label \(y\).
+\textbf{Unsupervised learning} data underlying structure: clustering, feature learning, dim reduction, density estimation.
+
+\textbf{Generative modelling} learn \(p_{\text{M}}\) sim to \(p_{\mathcal{D}}\), then sample from\(p_{\text{M}}\):
+\begin{itemize}
+    \item Explicit density: \begin{itemize}
+        \item Approximate: \begin{itemize}
+            \item Variational: VAE, Diffusion
+            \item \textcolor{gray}{Markov Chain: Boltzmann mach.}
+        \end{itemize}
+        \item Tractable: \begin{itemize}
+            \item Autoregressive: FVSBN/NADE/MADE, Pixel(c/r)nn, WaveNet/tcn, Autoregressive Transformer, LLM
+            \item Normalizing Flows
+        \end{itemize}
+    \end{itemize}
+    \item Implicit density: \begin{itemize}
+        \item Direct: Generative Adversarial Nets
+        \item \textcolor{gray}{Markov Chain: Gen Stoch Nets}
+    \end{itemize}
+\end{itemize}

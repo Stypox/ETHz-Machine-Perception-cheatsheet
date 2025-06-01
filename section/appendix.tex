@@ -1,11 +1,21 @@
 \section{Appendix}
 
-\textbf{Divergence} Kullback-Leibler $D_{\text{KL}}(p \| q) $ $= \int p(x) \log \frac{p(x)}{q(x)} dx
-$; Jensen-Shannon $D_{\text{JS}}(p \| q) $ $= \frac{1}{2} D_{\text{KL}}\left(p \middle\| \frac{1}{2}(p + q)\right) + \frac{1}{2} D_{\text{KL}}\left(q \middle\| \frac{1}{2}(p + q)\right)$; Cross-entropy \(H(p, q)=-\mathbb{E}_{p}[\log q]\); if \(p=\sum_i\delta_{x_i}\) empirical, \(H(p, q) = \mathrm{NLL}(q) = - \KL(p\|q) + H(p).\)
-
 \makebox[0pt][l]{\smash{\text{\raisebox{-0.7em}{\tiny (numerator layout)}}}}\(\text{\textbf{Jacobian}}_x(y) = \derivative{y}{x} = \begin{bmatrix}
 \derivative{y_1}{x_1} \dots \derivative{y_1}{x_n} \\
 \makebox[0pt][l]{\smash{\text{\raisebox{1em}{\tiny{\;\;\dots}}}}}\derivative{y_m}{x_1} \dots \makebox[0pt][l]{\smash{\text{\raisebox{1em}{\tiny{\;\;\dots}}}}}\derivative{y_m}{x_n}
 \end{bmatrix} \in \mathbb{R}^{m \cross n}\)
 
-\(\log{p(x)} = \log \int p(z) p(x|z) \,dz    = \log \int p(z) p(x|z) \frac{q(z|x)}{q(z|x)} \,dz    = \log \mathbb{E}_{z \sim q(z|x)}\left[p(x|z) \frac{p(z)}{q(z|x)}\right]    \geq \mathbb{E}_{z \sim q(z|x)}\left[\log \left(p(x|z) \frac{p(z)}{q(z|x)}\right)\right]    = \mathbb{E}_{z \sim q(z|x)}\left[\log p(x|z) - \log \frac{q(z|x)}{p(z)}\right]    =\mathbb{E}_{z \sim q(z|x)}\left[\log p(x|z)\right] - D_{\text{KL}} (q(z|x) | | p(z))\)
+\subsection*{Divergence}
+Kullback-Leibler $D_{\text{KL}}(p \| q) $ $= \int p(x) \log \frac{p(x)}{q(x)} dx
+$; Jensen-Shannon $D_{\text{JS}}(p \| q) $ $= \frac{1}{2} D_{\text{KL}}\left(p \middle\| \frac{1}{2}(p + q)\right) + \frac{1}{2} D_{\text{KL}}\left(q \middle\| \frac{1}{2}(p + q)\right)$; Cross-entropy \(H(p, q)=-\mathbb{E}_{p}[\log q]\); if \(p=\sum_i\delta_{x_i}\) empirical, \(H(p, q) = \mathrm{NLL}(q) = - \KL(p\|q) + H(p).\)
+
+\subsection*{Integrals of Gaussian}
+\(p=\mathcal{N}(\mu, \Sigma),q=\mathcal{N}(m, L)\), (1) \(H_p = [D (\ln 2 \pi+1) + \ln |L|] /2\).
+(2) \(H_{p, q} = -\int p \ln q d x = [D \ln 2 \pi + \ln |L|+ \operatorname{Tr}(L^{-1}\Sigma) + (\mu-m)^{\top}L^{-1}(\mu-m)] /2\).
+(3) If \(\Sigma = \text{diag}\{\sigma^2_i\},L = \text{diag}\{l^2_i\}\), \(H_{p, q} = (D\ln 2\pi + \sum_{i=1}^{D}\ln \l^2_j +  \sum_{i=1}^{D}(\sigma_i^2 + (\mu_i - m_i)^2) / l_i^2 )/2\).
+(4) \(\KL(p\|q) = [\ln |L|/|\Sigma|+ \operatorname{Tr}(L^{-1}\Sigma) - D + (\mu-m)^{\top}L^{-1}(\mu-m)] /2\).
+
+\subsection*{Reparam trick}
+\(z \sim \mathcal{N}(\mu, \text{diag}(\sigma_i^{2})) \Leftrightarrow \epsilon \sim \mathcal{N}(0,I), z=\mu+\sigma \odot \epsilon = f(x, \epsilon, \theta)\)\hspace{\stretch{1}}\( \implies\)
+
+\(\mathbb{E}_{z \sim q(z|x)}[f(z)] = \mathbb{E}_{\epsilon \sim \mathcal{N}(0, I)}[f(\mu + \sigma \odot \epsilon)]\)
