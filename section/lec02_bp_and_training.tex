@@ -1,5 +1,6 @@
 \section{Backprop \& Training}
-\textbf{Cross-entropy}: \(H(p, q)=-\mathbb{E}_{p}[\log q]\).
 \textbf{MLE}: \(\hat{\theta} = \arg\max_\theta \sum_{i}\log p(x_i|\theta)\).
-\textbf{KL div}: \(\KL(p\|q)=\mathbb{E}_{p}\log(p/q)\).
-If \(p=\sum_i\delta_{x_i}\) empirical, \(H(p, q) = \mathrm{NLL}(q) = - \KL(p\|q) + H(p).\)
+
+\textbf{MLPs are universal function approximators} / Boolean machines / classification functions: $\sigma$ non-constant bounded continuous, $\epsilon > 0$, $\forall f \in C(I_m)$ (cube of dim m), $f(x) \approx g(x) = \sum_{i=1}^{n} v_i \sigma(w_i^T x + b_i)$ (single hidden layer).
+
+\textbf{Double Descent} both epoch-wise and model complexity-wise: bias-variance tradeoff until interpolation threshold, then gets better again. $\text{EMC}_{D,\epsilon}(\mathcal{T}) = \max\{n | \mathbb{E}_{S\sim D}\left[\text{Error}_S(\mathcal{T}(S))\right] \leq \epsilon\}$. If $\ll n$ (underparam) or $\gg n$ (overparam) can decrease test error by making $n$ bigger, if $\approx n$ error can increase or decrease.

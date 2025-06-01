@@ -1,7 +1,7 @@
 \section{Appendix}
 
 \textbf{Divergence} Kullback-Leibler $D_{\text{KL}}(p \| q) $ $= \int p(x) \log \frac{p(x)}{q(x)} dx
-$; Jensen-Shannon $D_{\text{JS}}(p \| q) $ $= \frac{1}{2} D_{\text{KL}}\left(p \middle\| \frac{1}{2}(p + q)\right) + \frac{1}{2} D_{\text{KL}}\left(q \middle\| \frac{1}{2}(p + q)\right)$.
+$; Jensen-Shannon $D_{\text{JS}}(p \| q) $ $= \frac{1}{2} D_{\text{KL}}\left(p \middle\| \frac{1}{2}(p + q)\right) + \frac{1}{2} D_{\text{KL}}\left(q \middle\| \frac{1}{2}(p + q)\right)$; Cross-entropy \(H(p, q)=-\mathbb{E}_{p}[\log q]\); if \(p=\sum_i\delta_{x_i}\) empirical, \(H(p, q) = \mathrm{NLL}(q) = - \KL(p\|q) + H(p).\)
 
 \makebox[0pt][l]{\smash{\text{\raisebox{-0.7em}{\tiny (numerator layout)}}}}\(\text{\textbf{Jacobian}}_x(y) = \derivative{y}{x} = \begin{bmatrix}
 \derivative{y_1}{x_1} \dots \derivative{y_1}{x_n} \\
