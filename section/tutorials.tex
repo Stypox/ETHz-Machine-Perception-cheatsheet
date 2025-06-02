@@ -24,4 +24,4 @@
 
 \textbf{Learning rate} AdaGrad divide by $\sqrt{\sum_i ||\text{previousGrad}_i||_2^2}$; RMSProp exponential weighted average; Adam = AdaGrad + Momentum SGD.
 
-\textbf{Bagging/Ensemble} models trained separately; they have minima often connected by constant loss. Fast Geometric Ensembling trains model normally for 80\% of time, then final 20\% with cyclic lr, then ensemble (but many models!). Stochastic Weight Averaging: just one model and keep running avg of parameters when lr is minimum in cycle.
+\textbf{Bagging/Ensemble} models trained separately; they have minima often connected by constant loss. Fast Geometric Ens. trains model normally for 80\% of time, then final 20\% w/ cyclic lr, then ensemble (but many models!). Stochastic Weight Avging: just one model and keep running avg of parameters when lr is min in cycle.

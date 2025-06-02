@@ -14,9 +14,9 @@
 
 
 
-\textsf{F}:\( z_{ij}^{(l)}=w^{(l)} * z^{(l-1)}+b= \sum_{mn} w_{mn}^{(l)} z_{i-m, j-n}^{(l-1)}+b\). \\
-\textsf{B} on \(z\):\(\delta_{i,j}^{(l-1)} := \pdv{C}{z^{(l-1)}_{i,j}} = \sum_{i'j'} \pdv{C}{z^{(l)}_{i,j}} \pdv{z^{(l)}_{ij}}{z^{(l-1)}_{ij}} =  \sum_{i'j'} \delta_{ij}^{(l)} w_{i'-l,j'-j}^{(l)} = \delta^{(l)} * \text{ROT}_{180^{\circ}}(w^{(l)})\).\\
-\textsf{B} on \(w\):\(\pdv{C}{w^{(l)}_{m,n}} =  \sum_{i',j'} \pdv{C}{z^{(l)}_{i,j}} \pdv{z^{(l)}_{i,j}}{w^{(l)}_{m,n}} =  \delta^{(l)} * \text{ROT}_{180^{\circ}}(z^{(l-1)})\)
+% \textsf{F}:\( z_{ij}^{(l)}=w^{(l)} * z^{(l-1)}+b= \sum_{mn} w_{mn}^{(l)} z_{i-m, j-n}^{(l-1)}+b\). \\
+% \textsf{B} on \(z\):\(\delta_{i,j}^{(l-1)} := \pdv{C}{z^{(l-1)}_{i,j}} = \sum_{i'j'} \pdv{C}{z^{(l)}_{i,j}} \pdv{z^{(l)}_{ij}}{z^{(l-1)}_{ij}} =  \sum_{i'j'} \delta_{ij}^{(l)} w_{i'-l,j'-j}^{(l)} = \delta^{(l)} * \text{ROT}_{180^{\circ}}(w^{(l)})\).\\
+% \textsf{B} on \(w\):\(\pdv{C}{w^{(l)}_{m,n}} =  \sum_{i',j'} \pdv{C}{z^{(l)}_{i,j}} \pdv{z^{(l)}_{i,j}}{w^{(l)}_{m,n}} =  \delta^{(l)} * \text{ROT}_{180^{\circ}}(z^{(l-1)})\)
 
 \( L_{\text{out}}=\left\lfloor \frac{  L_{\text{in}} + 2\text{Pad}_{=0} - \text {Dilat}_{=1}(\text{Ker} - 1)-1 }{\text {Stride}_{=1}} + 1 \right\rfloor \) for \verb|Conv| and \verb|Pool|.
 

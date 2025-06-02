@@ -53,4 +53,14 @@ NN output texture/color \(t_\theta(p)\) and occupancy \(f_\theta(p) \in [0, 1]\)
 % 
 \(\mathsf{PE} = \text{cat}[\cos k\mathbf{v}, \sin k\mathbf{v}]_{k=1}^{2^L}\), 
 % 
-or \(\gamma(\mathbf{v})=[\cos (\mathbf{B v}), \sin (\mathbf{B v})] \quad \mathbf{B} \sim \mathcal{N}\left(0, \sigma^{2}\right)\), too big mapping bandwith  \(\sigma\) leads to noisy images (overfit).
+or \(\gamma(\mathbf{v})=[\cos (\mathbf{B v}), \sin (\mathbf{B v})] \quad \mathbf{B} \sim \mathcal{N}\left(0, \sigma^{2}\right)\), too big mapp bandwith \(\sigma\) $\rightarrow$ noisy img overfit.
+
+\textbf{App}: SNARF (changes applied to human in canonical pose), Vid2Avatar (separate static bg from fg)
+
+\subsection*{Gaussian splatting}
+
+Ellipsoids easy to render and to check for inters, and allow for thin structures.
+
+Each has $o$ occupancy, 3D $\mu$ pos, $\Sigma = RS S^T R^T$ rotat+diag scaling (semidef. pos). Need to splat on 2D: $\mu', \Sigma'$.
+
+$\alpha = o \cdot e^{-0.5(x-\mu')^T \Sigma'^{-1}(x-\mu')}$
