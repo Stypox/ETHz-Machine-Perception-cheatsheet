@@ -19,3 +19,9 @@ $; Jensen-Shannon $D_{\text{JS}}(p \| q) $ $= \frac{1}{2} D_{\text{KL}}\left(p \
 \(z \sim \mathcal{N}(\mu, \text{diag}(\sigma_i^{2})) \Leftrightarrow \epsilon \sim \mathcal{N}(0,I), z=\mu+\sigma \odot \epsilon = f(x, \epsilon, \theta)\)\hspace{\stretch{1}}\( \implies\)
 
 \(\mathbb{E}_{z \sim q(z|x)}[f(z)] = \mathbb{E}_{\epsilon \sim \mathcal{N}(0, I)}[f(\mu + \sigma \odot \epsilon)]\)
+
+\subsection*{Integral change of vars}
+
+Given $x=g(u)$, $\int_{x_0=g(a)}^{x_1=g(b)} f(x) dx = \int_{u_0=a}^{u_1=b} f(g(u)) g'(u) du$.
+
+For 2D given $x=g(u,v)$, $y=h(u,v)$, $\iint_{R} f(x,y) dxdy = \iint_{G} f(g(u,v), h(u,v)) J(u,v) dudv$

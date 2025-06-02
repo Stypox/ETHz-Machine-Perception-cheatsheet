@@ -33,7 +33,7 @@ If \(G,D\) enough capacity (strong assumpt), each step can reach \(D^*\),  updat
 
 \textbf{Progressive Growing of GAN}s:  Grow the generator and discriminator resolution by adding layers during training.
 
-\textbf{StyleGAN} uses layer-wise style conditioning with AdaIN (see tutorial), allows style mixing at different layers.
+\textbf{StyleGAN} uses layer-wise style conditioning with AdaIN (see tutorial), allows style mixing at different layers, has separate mapping network to provide conditioning.
 
 \textbf{Pix2Pix} cond GAN, Obj: \(\mathcal{L}(G, D)=\mathcal{L}_{c G A N}(G, D)+\lambda \mathcal{L}_{L 1}(G)\), \(\mathcal{L}_{{cGAN}}(G, D)=\mathbb{E}_{x, y}[\ln D(x, y)]+\mathbb{E}_{x, z}[1-\ln D(x, G(x, z))]\), \(x\) conditions, \(\mathcal{L}_{L 1}(G)=\mathbb{E}_{x, y, z}[\|y-G(x, z)\|_{1}]\) reconstruction loss. Requires paired images as training data. Translates samples from two sides e.g. facade rectangles to facade img.
 
@@ -45,7 +45,7 @@ If \(G,D\) enough capacity (strong assumpt), each step can reach \(D^*\),  updat
 
 % \textbf{GauGAN} Given semantic seg and reference style, synthesize image. Problem with pix2pix: Unconditional norm layer in \(G\) “washes away” information of semantic labels. Sol: Spatial cond norm \(\gamma_{c, y, x}^{i}({m}) \frac{h_{n, c, y, x}^{i}-\mu_{c}^{i}}{\sigma_{c}^{i}}+\beta_{c, y, x}^{i}({m})\)
 
-\textbf{RLHF} used for training LLMs.
+GAN can be used anywhere: \textbf{RLHF} used for training LLMs.
 
 \textbf{3D Applications}: 3D-GAN outputs objects, PlatonicGAN uses 3D-GAN but converts back to 2D for training to make use of images, HoloGAN like PlatonicGAN but outputs 3D features that can be rendered with neural rendereing, EG3D uses tri-plane projections 3D representation and neural rendering
 

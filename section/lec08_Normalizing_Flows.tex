@@ -11,7 +11,7 @@ Flow Trans:\({x} = f_{k} \circ f_{k-1} \circ \cdots f_{2} \circ f_{1}(z)\), \(p_
 \textbf{Radial}: \(f({z})={z}+\beta h(\alpha, r)({z}-{z}_{0})\), \(r=|{z}-{z}_{0}|\), \(h(\alpha, r)=(\alpha+r)^{-1}\), \(|\operatorname{det} \partial_{{z}} f| = [1+\beta h(\alpha, r)]^{d-1}[1+\beta h(\alpha, r)+\beta h^{\prime}(\alpha, r) r]\)
 
 \subsection*{Coupling Layer}
-\textsf{F}
+\textsf{$f$\!:\!}
 \(\left(\begin{array}{c}
         y^{A} \\
         y^{B}
@@ -19,30 +19,30 @@ Flow Trans:\({x} = f_{k} \circ f_{k-1} \circ \cdots f_{2} \circ f_{1}(z)\), \(p_
         h(x^{A}, \beta(x^{B})) \\
         x^{B}
     \end{array}\right),\)
-\textsf{R} \(\left(\begin{array}{l}
+\textsf{$f^{-1}$\!:\!} \(\left(\begin{array}{l}
         x^{A} \\
         x^{B}
     \end{array}\right)=\left(\begin{array}{c}
         h^{-1}(y^{A}, \beta(y^{B}))) \\
         y^{B}
     \end{array}\right),\)
-Jacob \(\left(\begin{array}{cc}
+Jacob: \(\left(\begin{array}{cc}
         h^{\prime} & h^{\prime} \beta^{\prime} \\
         0          & 1
     \end{array}\right).\)\\
 \(h(x) = (h(x_{1}), \ldots, h(x_{n}))^{\top}\) element-wise. \( \partial_{x^{\top}} h=\operatorname{diag}(h^{\prime}(x_{1}), \ldots, h^{\prime}(x_{n}))\).
 
-Continuous NF: model infinite number of trans with proper temporal discretization. Neural ODE.
+Continuous NF: model infinite number of trans with proper temporal discretization. I.e. model the evolution of a neural ODE.
 
-\begin{center}
-    \includegraphics[width=0.8\columnwidth]{figures/coupling_layer.png}
-\end{center}
+% \begin{center}
+%     \includegraphics[width=0.8\columnwidth]{figures/coupling_layer.png}
+% \end{center}
 
-\subsection*{NF in CV, Flow Block (FB)}
+\subsection*{Multiscale architecture, \textit{FB = step of flow}}
 
-In NF, part of output processed, else passed to latter layer. Shuffle needed and different among papers.
+x -> [Squeeze, [FB1, FB2, FB3]$\cross K$,  Split -> $z_i$]$\cross (L-1)$, Squeeze, [FB1, FB2, FB3]$\cross K$ -> $z_L$
 
-Squeeze \& split: reduce spacial dimension and distribute them into the channel, splitting in channel. \((i,j)\): spacial idx.
+Squeeze reduces spatial dimensions (and increases num of channels). Split outputs half of the features $z$ (so it iteratively gets smaller).
 
 \subsection*{FB1 - activation norm}
 Scale and bias per channel, sim to BN, data depend, trainable.
@@ -58,16 +58,13 @@ Scale and bias per channel, sim to BN, data depend, trainable.
 \(O(c^3)\) for \(|\operatorname{det}{W}|\)  reduce to \(O(c)\) by \({W}={P L}({U}+\operatorname{diag}({s}))\), \(\log |\operatorname{det}{W}|=\operatorname{sum}(\log |{s}|)\).
 
 
-\subsection*{Fb3 - (conditional) coupling layer}
+\subsection*{Fb3 - (conditional) affine coupling layer}
 
-\textsf{F} \({x}_{a}, {x}_{b}=\operatorname{split}({x})\), \((\log {s}, {t})=\mathrm{NN}({x}_{b}) \), \({s}=\exp (\log {s})\), \( {y}_{a}={s} \odot {x}_{a}+{t}\), \({y}_{b}={x}_{b}\), \({y}=\operatorname{concat}({y}_{a}, {y}_{b})\),
-\textsf{R} \({y}_{a}, {y}_{b}=\operatorname{split}({y})\), \((\log {s}, {t})=\mathrm{NN}({y}_{b})\), \({s}=\exp (\log {s})\), \({x}_{a}=({y}_{a}-{t}) / {s}\), \({x}_{b}={y}_{b}\), \({x}=\operatorname{concat}({x}_{a}, {x}_{b})\),
-\textsf{LogDet} \(\operatorname{sum}(\log (|{s}|))\).
 \textbf{Conditional operation} \(\beta(x^{B};C)\).
 
-\begin{center}
-    \includegraphics[width=0.5\columnwidth]{figures/flow_block.png}
-\end{center}
+% \begin{center}
+%     \includegraphics[width=0.5\columnwidth]{figures/flow_block.png}
+% \end{center}
 
 \subsection*{Application}
 
@@ -77,15 +74,13 @@ Scale and bias per channel, sim to BN, data depend, trainable.
 \textbf{StyleFlow}(cmp to StyleGAN) Replace mapping network with a continuous normalizing flow, Condition on image attributes.
 
 
-\textbf{C-Flow} 
+\textbf{C-Flow} with two flows
 
 Conditioning \(Flow_A\): Standard affine coupling layer, to images.
 
 Conditioned \(Flow_B\): trans param conditioned on, to point cloud, sketch, seg, etc.
 
-\textbf{Enable} (1) (multimodal) image-to-image mapping (2) style transfer (3) image manipulation (4) 3D point cloud reconstruction from images.
+\textbf{Applications} (1) (multimodal) image-to-image mapping (2) style transfer (3) image manipulation (4) 3D point cloud reconstruction from images. (5) Probabilistic Modeling for Human Mesh Recovery (6) PointFlow: 3D Point Cloud Generation (7) but long training and low res
 
-\textbf{APP} Probabilistic Modeling for Human Mesh Recovery
-
-\subsection*{Difficalty for geneartive model}
+\subsection*{Difficulty for generative model}
 Evaluating \(\log p(x)\) is hard and usually computationally not tractable.
