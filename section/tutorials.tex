@@ -10,6 +10,10 @@
 
 \textbf{Batch norm.} $x_{i}^N = (x_i-\mu) / \sqrt{\sigma^2 + \epsilon}$ where $\epsilon$ small for numerical stability, then $\tilde{x}_{i} = \gamma x_i^N + \beta$ where $\gamma, \beta \in \mathbb{R}$ learnable. In theory solves internal covariate shift, in practice makes smoother landscape, allows higher learning rate.
 
+\textbf{Feature modulation} $c' = \gamma(s) \odot c + \beta(s)$ if we want to apply info from embedding $s$ to embedding $c$.
+
+\textbf{AdaIN} = normalization $\circ$ feat mod.
+
 
 \textbf{Activation} ReLU $\max(0,x)$, leaky ReLU $\max(\alpha x,x)$, random lky ReLU $\alpha \sim \mathcal{U}(a,b)$
 \(\sigma(x) = \frac{1}{1+e^{-x}}\) \hspace{\stretch{1}} \(\sigma'(x) = \sigma(x) \cdot (1 - \sigma(x))\)

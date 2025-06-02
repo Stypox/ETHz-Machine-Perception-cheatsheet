@@ -2,23 +2,15 @@
 
 \textbf{Intuition} Likelihood not good indicator for generation, can be independent: \(\ln [0.01 p_{\text{true}}+0.99 q_{\text{noise}}] \geq \ln [0.01 p_{\text{true}}]=\ln p({x})-\ln 100\).
 
-\textbf{Pros} (1) Highly expressive, (2) Density function not defined or intractable.
- \textbf{Cons} Lack of theory and learning algo cmp to explicit models.
+\textbf{Idea} Two-player game. \textbf{Generator} fool the discriminator with real-looking images \(G: \mathbb{R}^{Q} \to \mathbb{R}^{D}\) from Gaussian noise to images. \textbf{Discriminator} distinguish btw real and fake img \(D: \mathbb{R}^{D} \to [0,1]\) (0=fake\!)\!.
 
+\textbf{Objective} \( \operatorname{argmin}_G \max_D {V}_{{G}, {D}}=\mathbb{E}_{x \sim p_d} [\ln D({x})] + \mathbb{E}_{\hat{x} \sim p_g} [\ln (1-D(\hat{{x}}))] = \mathbb{E}_{x \sim p_d} [\ln D({x})] + \mathbb{E}_{\hat{z} \sim p_z} [\ln (1-D(G(z)))]\)
 
-\textbf{Idea} Two-player game. \textbf{Generator} fool the discriminator with real-looking images \(G: \mathbb{R}^{Q} \to \mathbb{R}^{D}\) from Gaussian noise to images. \textbf{Discriminator} distinguish btw real and fake img \(D: \mathbb{R}^{D} \to [0,1]\).
+\textbf{Optimal} \(D^{*} = \operatorname{argmax}_D {V}_{{G}, {D}} = \frac{p_{\text{D}}({x})}{p_{\text {D}}({x})+p_{\text {M}}({x})}\), proof by turning $\mathbb{E}$ into integrals and solving for $0=\nabla_D$integral body (and ensure concave, $\nabla\nabla_D > 0$). Then \(V_{G, D^{*}} =  -\ln 4+2 \JS (p_{d}({x}) \| p_{m}({x}))\), global optim if \(p_{d}({x})\equiv p_{m}({x})\).
 
-\textbf{Obj} \( \underset{G}{\operatorname{min}} \underset{D}{\operatorname{max}} {V}_{{G}, {D}}=\ln D({x}) + \ln (1-D(\hat{{x}}))\)
+If \(G,D\) enough capacity (strong assumpt), each step can reach \(D^*\),  update \(p_{m}\) directly instead of its param, then \(V(p_{\text{M}}, D^{*})\) is convex, global optim can reach and \( \propto \sup _{D} \mathbb{E}_{p_{m}({x})} \ln (1-D({x})) d {x}\).
 
-\textbf{Optim} \(D^{*} = \underset{D}{\operatorname{argmax}} {V}_{{G}, {D}} = \frac{p_{\text{D}}({x})}{p_{\text {D}}({x})+p_{\text {M}}({x})}\). 
-% 
-Jensen-Shannon Div \(\JS(p \| q\ := [ {D}_{K L}(p \| \frac{p+q}{2})+{D}_{K L}(q \| \frac{p+q}{2}) ]/2\), \(\JS(p \| q)=0\) iff \(p_{\text {D}}\equiv p_{\text {M}}\).
-
-\(V_{G, D^{*}} =  -\ln 4+2 \JS (p_{d}({x}) \| p_{m}({x}))\), global optim if \(p_{\text {D}}({x})\equiv p_{\text {M}}({x})\).
-
-If \(G,D\) enough capacity, each step can reach \(D^*\),  update \(p_{\text {M}}\) directly instead of its param, then \(V(p_{\text{M}}, D^{*})\) is convex, global optim can reach and \( \propto \sup _{D} \mathbb{E}_{p_{\text {M}}({x})} \ln (1-D({x})) d {x}\).
-
-(1) In practice pptim \(D\) in inner-loop is computationally prohibitive and lead to overfitting on finite datasets.
+(1) In practice finding optimal \(D\) in inner-loop is computationally prohibitive and lead to overfitting on finite datasets.
 
 (2) \textbf{Aim} keep \(D\) near optimum and \(G\) changes only slowly: \(k\) steps of optim \(D\) (typically \(k \in\{1, \ldots, 5\}\)), 1 step of optim \(G\) with small lr. 
 
@@ -28,23 +20,32 @@ If \(G,D\) enough capacity, each step can reach \(D^*\),  update \(p_{\text {M}}
 
 \subsection*{Issues}
 
-1. Difficult to train, Mode collapse (no sample diversity), saddle point in dual energy landscape. Sol: unrolled GAN.
+1. Difficult to train, Mode collapse (no sample diversity), saddle point in dual energy landscape. Sol: unrolled GAN (simulate $k'$ more steps of $D$ to calculate grads for $G$, then revert to prev $D$).
 
 2. Low dim manifolds in high dim prob space have little overlap. \(D\) of vanilla GAN saturates if no overlapping support. \(\JS\) only measures similarity, not `work' required from \(p_{\text {M}}\) to  \(p_{\text {D}}\). Sol: Wasserstein GAN. GAN can be generalized to entire family of div.
 
 \subsection*{Pros and Cons}
 \textbf{Pros} (1) A wide variety of functions and distributions can be modeled (flexibility). (2) Only backprop when training, no sampling, stochastic optim. (3)  No approximation to likelihood required as in VAEs. (4) Samples more realistic than other DGMs.
 
-\textbf{Cons} (1) No explicit \(p_{M}\). (2) no direct means to evaluate likelihood (3) Careful balancing \(G\) and \(D\) during training .
+\textbf{Cons} (1) No explicit \(p_{M}\). (2) no direct means to evaluate likelihood (3) Careful balancing \(G\) and \(D\) during training. (4) lack of theory and learning algo wrt explicit models.
 
 \subsection*{Applications}
 
-\textbf{Pix2Pix} cond GAN, Obj: \(\mathcal{L}(G, D)=\mathcal{L}_{c G A N}(G, D)+\lambda \mathcal{L}_{L 1}(G)\), \(\mathcal{L}_{{cGAN}}(G, D)=\mathbb{E}_{x, y}[\ln D(x, y)]+\mathbb{E}_{x, z}[1-\ln D(x, G(x, z))]\), \(x\) conditions, \(\mathcal{L}_{L 1}(G)=\mathbb{E}_{x, y, z}[\|y-G(x, z)\|_{1}]\) reconstruction loss. requires paired images as training data. Translate samples from two side.
+\textbf{Progressive Growing of GAN}s:  Grow the generator and discriminator resolution by adding layers during training.
+
+\textbf{StyleGAN} uses layer-wise style conditioning with AdaIN (see tutorial), allows style mixing at different layers.
+
+\textbf{Pix2Pix} cond GAN, Obj: \(\mathcal{L}(G, D)=\mathcal{L}_{c G A N}(G, D)+\lambda \mathcal{L}_{L 1}(G)\), \(\mathcal{L}_{{cGAN}}(G, D)=\mathbb{E}_{x, y}[\ln D(x, y)]+\mathbb{E}_{x, z}[1-\ln D(x, G(x, z))]\), \(x\) conditions, \(\mathcal{L}_{L 1}(G)=\mathbb{E}_{x, y, z}[\|y-G(x, z)\|_{1}]\) reconstruction loss. Requires paired images as training data. Translates samples from two sides e.g. facade rectangles to facade img.
 
 \textbf{CycleGAN} unpaired image translation: Two conditional GANs \(\mathcal{L}(G, F, D_{X}, D_{Y})=\mathcal{L}_{G A N}(G, D_{Y}, X, Y)+\mathcal{L}_{G A N}(F, D_{X}, Y, X)+\lambda \mathcal{L}_{\text {cyc }}(G, F)\), \(L_{cyc} = .=\mathbb{E}_{x \sim p_{\text {D}}(x)}\|\| F(G(x))-x \|_{1}]+\mathbb{E}_{y \sim p_{\text {D}}(y)}[\|G(F(y))-y\|_{1}]\). Transfer and Transfer back.
 
-\textbf{GauGAN} Given semantic seg and reference style, synthesize image. Problem with pix2pix: Unconditional norm layer in \(G\) “washes away” information of semantic labels. Sol: Spatial cond norm \(\gamma_{c, y, x}^{i}({m}) \frac{h_{n, c, y, x}^{i}-\mu_{c}^{i}}{\sigma_{c}^{i}}+\beta_{c, y, x}^{i}({m})\)
+\textbf{BicycleGAN} both image and style cycle consistency.
 
-\textbf{Progressive Growing of GAN}s:  Grow the generator and discriminator resolution by adding layers during training.
+\textbf{Vid2vid} uses $p(\tilde{y}_{1:T} \mid x_{1:T}) = \prod_{t=1}^{T} p(\tilde{y}_t \mid \tilde{y}_{t-L:t-1}, \, x_{t-L:t})$ to also use past frame.
 
-\textbf{StyleGAN}
+% \textbf{GauGAN} Given semantic seg and reference style, synthesize image. Problem with pix2pix: Unconditional norm layer in \(G\) “washes away” information of semantic labels. Sol: Spatial cond norm \(\gamma_{c, y, x}^{i}({m}) \frac{h_{n, c, y, x}^{i}-\mu_{c}^{i}}{\sigma_{c}^{i}}+\beta_{c, y, x}^{i}({m})\)
+
+\textbf{RLHF} used for training LLMs.
+
+\textbf{3D Applications}: 3D-GAN outputs objects, PlatonicGAN uses 3D-GAN but converts back to 2D for training to make use of images, HoloGAN like PlatonicGAN but outputs 3D features that can be rendered with neural rendereing, EG3D uses tri-plane projections 3D representation and neural rendering
+
